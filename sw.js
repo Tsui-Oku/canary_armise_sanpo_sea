@@ -1,5 +1,5 @@
 // 一度開くと、ネットがなくても遊べるように、ファイルを端末に保存する
-const SHELL = 'walk3d-v7';        // アプリ本体（新しくするときは、この番号を上げる）
+const SHELL = 'walk3d-v9';        // アプリ本体（新しくするときは、この番号を上げる）
 const MUSIC = 'walk3d-music';     // 曲（アプリを新しくしても残す）
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png'];
 self.addEventListener('install', e => {
@@ -13,7 +13,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const r = e.request; if (r.method !== 'GET') return;
   const u = new URL(r.url); if (u.origin !== location.origin) return;
-  const isMusic = u.pathname.includes('/music/');
+  const isMusic = u.pathname.includes('/music/') || u.pathname.includes('/models/');   // 曲とキャラのデータは、アプリを新しくしても残す
   // 曲の一覧：ネットがつながるときは最新を、つながらないときは保存したものを
   if (u.pathname.endsWith('/music/tracks.json')) {
     e.respondWith(fetch(r).then(res => { const c = res.clone(); caches.open(MUSIC).then(x => x.put(r, c)); return res; }).catch(() => caches.match(r)));
